@@ -18,12 +18,12 @@ def handle_reaction_added(payload):
     slack_channel = payload.get('item').get('channel')
     slack_thread_timestamp = payload.get('item').get('ts')
 
-    print("Retrieving content of message")
-    content = slack_client.retrieve_slack_message(slack_channel, slack_thread_timestamp)
+    print("Retrieving message that was reacted to")
+    message = slack_client.retrieve_slack_message(slack_channel, slack_thread_timestamp)
     print("Translating content from <de> to <en>")
     translation = ubersetzer_client.translate(UbersetzerLanguage.GERMAN,
                                               UbersetzerLanguage.ENGLISH,
-                                              content)
+                                              message)
 
     print("Sending translation back in thread")
     slack_client.reply(channel=slack_channel, thread_timestamp=slack_thread_timestamp, message=translation)
@@ -31,4 +31,3 @@ def handle_reaction_added(payload):
 
 if __name__ == '__main__':
     app.start(port=3000)
-

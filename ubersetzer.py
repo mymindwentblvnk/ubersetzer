@@ -1,9 +1,11 @@
 from enum import Enum
 
+from googletrans import Translator
+
 
 class UbersetzerLanguage(Enum):
-    GERMAN = 1
-    ENGLISH = 2
+    GERMAN = 'de'
+    ENGLISH = 'en'
 
 
 class Ubersetzer(object):
@@ -15,4 +17,4 @@ class Ubersetzer(object):
                   source_language: UbersetzerLanguage,
                   target_language: UbersetzerLanguage,
                   message: str) -> str:
-        return message
+        return Translator().translate(message).text
