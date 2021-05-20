@@ -3,7 +3,7 @@ import logging
 from slack_bolt import App
 
 from ubersetzer import Ubersetzer, Language
-from slack_api import SlackClient
+from slack_api import SlackClient, create_blocks_for_translation
 
 
 # SLACK_BOT_TOKEN: Bot User OAuth Token
@@ -47,9 +47,12 @@ def handle_reaction_added(payload):
 
     logging.info(f"Will post '{translation}' to channel {slack_channel} "
                  f"into thread with timestamp {slack_thread_timestamp}")
+    slack_blocks = create_blocks_for_translation(translation,
+                                                 target_language,
+                                                 config('ADMIN_SLACK_CHANNEL'))
     slack_client.reply(channel=slack_channel,
                        thread_timestamp=slack_thread_timestamp,
-                       message=translation)
+                       blocks=slack_blocks)
 
 
 if __name__ == '__main__':
