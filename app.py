@@ -1,4 +1,5 @@
 import logging
+logging.basicConfig(level=logging.INFO)
 
 from decouple import config
 from flask import Flask, request
@@ -64,7 +65,6 @@ app = Flask(__name__)
 # SlackRequestHandler translates WSGI requests to Bolt's interface
 # and builds WSGI response from Bolt's response.
 handler = SlackRequestHandler(slack_app)
-handler.setLevel(logging.DEBUG)
 
 
 @app.route("/slack/events", methods=["POST"])
