@@ -73,4 +73,4 @@ def slack_events():
 
 
 if __name__ == '__main__':
-    slack_app.start(port=3000)
+    app.run(port=3000)
