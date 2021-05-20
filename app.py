@@ -12,8 +12,7 @@ from slack_api import SlackClient, create_blocks_for_translation
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# SLACK_BOT_TOKEN: Bot User OAuth Token
-slack_app = App(token=config('SLACK_BOT_TOKEN'),
+slack_app = App(token=config('BOT_USER_OAUTH_TOKEN'),
                 signing_secret=config('SLACK_SIGNING_SECRET'))
 handler = SlackRequestHandler(slack_app)
 
