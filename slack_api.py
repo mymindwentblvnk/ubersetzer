@@ -7,7 +7,7 @@ def create_introduction_block(target_language: Language) -> dict:
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": f"The following translation into {target_language.value.language} :{target_language.value.flag_emoji}: was triggered by :{target_language.value.emoji}:."
+            "text": f"The following translation into {target_language.value.language} :{target_language.value.flag_emoji}: was triggered by :{target_language.value.emoji}:."  # noqa: E501
         }
     }
 
@@ -18,7 +18,7 @@ def create_feedback_block(admin_slack_channel) -> dict:
         "elements": [
             {
                 "type": "mrkdwn",
-                "text": f":bulb: If you have feedback, contact us in #{admin_slack_channel}",
+                "text": f":bulb: If you have feedback, contact us in #{admin_slack_channel}",  # noqa: E501
             }
         ]
     }
@@ -40,7 +40,9 @@ def create_translation_block(translation: str) -> dict:
     }
 
 
-def create_blocks_for_translation(translation: str, target_language: Language, admin_slack_channel: str) -> list:
+def create_blocks_for_translation(translation: str,
+                                  target_language: Language,
+                                  admin_slack_channel: str) -> list:
     return [
         create_introduction_block(target_language),
         create_divider_block(),
@@ -62,7 +64,7 @@ class SlackClient(object):
                                                     inclusive=True,
                                                     oldest=thread_timestamp,
                                                     limit=1)
-        [message] = [m['text'] for m in history['messages'] if m['ts'] == thread_timestamp]  # noqa
+        [message] = [m['text'] for m in history['messages'] if m['ts'] == thread_timestamp]  # noqa: E501
         return message
 
     def reply(self, channel: str, thread_timestamp: str, blocks: list):
