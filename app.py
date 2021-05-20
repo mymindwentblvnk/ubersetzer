@@ -72,4 +72,4 @@ def slack_events():
 
 
 if __name__ == '__main__':
-    flask_app.start(port=3000)
+    app.start(port=3000)
