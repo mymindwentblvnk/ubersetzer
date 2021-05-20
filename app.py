@@ -22,6 +22,12 @@ def handle_reaction_added(payload):
         target_language = Language.GERMAN
     elif reaction == Language.ENGLISH.value.emoji:
         target_language = Language.ENGLISH
+    elif reaction == Language.BOSNIAN.value.emoji:
+        target_language = Language.BOSNIAN
+    elif reaction == Language.SERBIAN.value.emoji:
+        target_language = Language.SERBIAN
+    elif reaction == Language.CROATIAN.value.emoji:
+        target_language = Language.CROATIAN
     elif reaction == Language.DUTCH.value.emoji:
         target_language = Language.DUTCH
     else:

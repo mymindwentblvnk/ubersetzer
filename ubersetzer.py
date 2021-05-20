@@ -14,8 +14,12 @@ class LanguageData(object):
 
 
 class Language(Enum):
+    # Supported languages: https://cloud.google.com/translate/docs/languages
     GERMAN = LanguageData(iso='de', emoji='pls-translate-to-de')
     ENGLISH = LanguageData(iso='en', emoji='pls-translate-to-en')
+    SERBIAN = LanguageData(iso='sr', emoji='pls-translate-to-sr')
+    BOSNIAN = LanguageData(iso='bs', emoji='pls-translate-to-bs')
+    CROATIAN = LanguageData(iso='hr', emoji='pls-translate-to-hr')
     DUTCH = LanguageData(iso='nl', emoji='pls-translate-to-nl')
 
 
