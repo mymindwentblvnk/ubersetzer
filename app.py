@@ -1,6 +1,9 @@
-from decouple import config
 import logging
+
+from decouple import config
+from flask import Flask, request
 from slack_bolt import App
+from slack_bolt.adapter.flask import SlackRequestHandler
 
 from ubersetzer import Ubersetzer, Language
 from slack_api import SlackClient, create_blocks_for_translation
@@ -56,15 +59,14 @@ def handle_reaction_added(payload):
 
 
 # Initialize Flask app
-from flask import Flask, request
 app = Flask(__name__)
 
 # SlackRequestHandler translates WSGI requests to Bolt's interface
 # and builds WSGI response from Bolt's response.
-from slack_bolt.adapter.flask import SlackRequestHandler
 handler = SlackRequestHandler(slack_app)
+handler.setLevel(logging.DEBUG)
 
-# Register routes to Flask app
+
 @app.route("/slack/events", methods=["POST"])
 def slack_events():
     return handler.handle(request)
