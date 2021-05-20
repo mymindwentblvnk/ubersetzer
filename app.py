@@ -1,5 +1,4 @@
 import logging
-logging.basicConfig(level=logging.INFO)
 
 from decouple import config
 from flask import Flask, request
@@ -10,9 +9,15 @@ from ubersetzer import Ubersetzer, Language
 from slack_api import SlackClient, create_blocks_for_translation
 
 
+app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
+
 # SLACK_BOT_TOKEN: Bot User OAuth Token
 slack_app = App(token=config('SLACK_BOT_TOKEN'),
-          signing_secret=config('SLACK_SIGNING_SECRET'))
+                signing_secret=config('SLACK_SIGNING_SECRET'))
+handler = SlackRequestHandler(slack_app)
+
+
 slack_client = SlackClient(config('SLACK_BOT_TOKEN'))
 ubersetzer = Ubersetzer()
 
@@ -59,16 +64,10 @@ def handle_reaction_added(payload):
                        blocks=slack_blocks)
 
 
-# Initialize Flask app
-app = Flask(__name__)
-
-# SlackRequestHandler translates WSGI requests to Bolt's interface
-# and builds WSGI response from Bolt's response.
-handler = SlackRequestHandler(slack_app)
-
-
 @app.route("/slack/events", methods=["POST"])
 def slack_events():
+    # SlackRequestHandler translates WSGI requests to Bolt's interface
+    # and builds WSGI response from Bolt's response.
     return handler.handle(request)
 
 
