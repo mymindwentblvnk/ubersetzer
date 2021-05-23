@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 # Flask
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL').replace('postgres:', 'postgresql:')
+app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL').replace('postgres:', 'postgresql:')  # noqa: E501
 # Database
 db.init_app(app)
 with app.app_context():
@@ -72,7 +72,7 @@ def handle_reaction_added(payload):
 
     # This has to be after the check for allowed reaction emojis
     slack_reaction = retrieve_slack_reaction(channel_id=slack_channel,
-                                             thread_timestamp=slack_thread_timestamp,  # noqa E501
+                                             thread_timestamp=slack_thread_timestamp,  # noqa: E501
                                              reaction=reaction)
     if slack_reaction:
         logging.info("This message was already translated. "
@@ -85,7 +85,7 @@ def handle_reaction_added(payload):
     else:
         with app.app_context():
             slack_reaction = SlackReaction(channel_id=slack_channel,
-                                           thread_timestamp=slack_thread_timestamp,  # noqa E501
+                                           thread_timestamp=slack_thread_timestamp,  # noqa: E501
                                            reaction=reaction)
             db.session.add(slack_reaction)
             db.session.commit()
