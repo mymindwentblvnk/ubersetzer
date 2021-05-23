@@ -1,5 +1,5 @@
 from slack import WebClient
-from ubersetzer import Language
+from translation_client import Language
 
 
 def create_introduction_block(target_language: Language) -> dict:
@@ -70,4 +70,5 @@ class SlackClient(object):
     def reply(self, channel: str, thread_timestamp: str, blocks: list):
         _ = self.client.chat_postMessage(channel=channel,
                                          blocks=blocks,
+                                         text="ubersetzer: New translation for a thread you follow.",
                                          thread_ts=thread_timestamp)
