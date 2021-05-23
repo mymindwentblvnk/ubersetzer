@@ -1,5 +1,5 @@
 from slack import WebClient
-from ubersetzer import Language
+from translation_client import Language
 
 
 def create_introduction_block(target_language: Language) -> dict:

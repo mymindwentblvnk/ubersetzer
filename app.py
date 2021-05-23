@@ -6,8 +6,8 @@ from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 
 from models import db, SlackReaction
-from ubersetzer import Ubersetzer, Language
-from slack_api import SlackClient, create_blocks_for_translation
+from translation_client import TranslationClient, Language
+from slack_client import SlackClient, create_blocks_for_translation
 
 
 # Configuration
@@ -30,7 +30,7 @@ handler = SlackRequestHandler(slack_app)
 
 # Clients
 slack_client = SlackClient(config('BOT_USER_OAUTH_TOKEN'))
-ubersetzer = Ubersetzer()
+translation_client = TranslationClient()
 
 
 def retrieve_slack_reaction(channel_id: str,
@@ -95,8 +95,8 @@ def handle_reaction_added(payload):
                                                   slack_thread_timestamp)
 
     logging.info("Translating message")
-    translation = ubersetzer.translate(message=message,
-                                       target_language=target_language)
+    translation = translation_client.translate(message=message,
+                                               target_language=target_language)
 
     logging.info(f"Will post translation to channel {slack_channel} "
                  f"into thread with timestamp {slack_thread_timestamp}")

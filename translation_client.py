@@ -25,7 +25,7 @@ class Language(Enum):
     DUTCH = LanguageData(iso='nl', emoji='pls-translate-to-nl', language='Dutch', flag_emoji='flag-nl')  # noqa: E501
 
 
-class Ubersetzer(object):
+class TranslationClient(object):
 
     def __init__(self):
         pass
