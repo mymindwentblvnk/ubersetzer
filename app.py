@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 # Flask
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL').replace('postgres:', 'postgresql:')
 # Database
 db.init_app(app)
 with app.app_context():
