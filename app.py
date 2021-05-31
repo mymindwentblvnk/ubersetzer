@@ -33,16 +33,26 @@ slack_client = SlackClient(config('BOT_USER_OAUTH_TOKEN'))
 translation_client = TranslationClient()
 
 
-def retrieve_slack_reaction(channel_id: str,
-                            thread_timestamp: str,
-                            reaction: str) -> bool:
+def check_if_thread_was_already_translated_and_persist_slack_reaction(channel_id: str,  # noqa: E501
+                                                                      thread_timestamp: str,  # noqa: E501
+                                                                      reaction: str) -> bool:  # noqa: E501
     with app.app_context():
-        slack_reaction = db.session.query(SlackReaction).\
+        # Check if there was any reaction already
+        slack_reaction_count = db.session.query(SlackReaction).\
             filter_by(channel_id=channel_id).\
             filter_by(thread_timestamp=thread_timestamp).\
             filter_by(reaction=reaction).\
-            first()
-        return slack_reaction
+            count()
+
+        # Persist reaction
+        slack_reaction = SlackReaction(channel_id=channel_id,
+                                       thread_timestamp=thread_timestamp,  # noqa: E501
+                                       reaction=reaction)
+        db.session.add(slack_reaction)
+        db.session.commit()
+
+        # Return if there was any reaction already
+        return slack_reaction_count > 0
 
 
 @slack_app.event('reaction_added')
@@ -71,24 +81,13 @@ def handle_reaction_added(payload):
         return
 
     # This has to be after the check for allowed reaction emojis
-    slack_reaction = retrieve_slack_reaction(channel_id=slack_channel,
-                                             thread_timestamp=slack_thread_timestamp,  # noqa: E501
-                                             reaction=reaction)
-    if slack_reaction:
+    already_translated = check_if_thread_was_already_translated_and_persist_slack_reaction(channel_id=slack_channel,  # noqa: E501
+                                                                                           thread_timestamp=slack_thread_timestamp,  # noqa: E501
+                                                                                           reaction=reaction)  # noqa: E501
+    if already_translated:
         logging.info("This message was already translated. "
-                     "Counter will be increased.")
-        with app.app_context():
-            slack_reaction.reaction_count = slack_reaction.reaction_count + 1
-            db.session.add(slack_reaction)
-            db.session.commit()
+                     "Reaction will still be logged for statistical reasons.")
         return
-    else:
-        with app.app_context():
-            slack_reaction = SlackReaction(channel_id=slack_channel,
-                                           thread_timestamp=slack_thread_timestamp,  # noqa: E501
-                                           reaction=reaction)
-            db.session.add(slack_reaction)
-            db.session.commit()
 
     logging.info("Retrieving message that was reacted to")
     message = slack_client.retrieve_slack_message(slack_channel,
